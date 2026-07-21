@@ -613,6 +613,8 @@ textarea:focus-visible {
 }
 .recommendation-heading { margin-bottom: 1rem; display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
 .recommendation-heading h3 { margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.35rem, 3vw, 1.8rem); letter-spacing: -.04em; }
+.recommendation-hint { margin: -.35rem 0 1rem; color: var(--muted); font-size: .75rem; line-height: 1.45; }
+.recommendation-hint span { color: var(--pink-dark); font-weight: 800; }
 .itinerary-stops { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: .7rem; }
 .itinerary-stop {
   position: relative;

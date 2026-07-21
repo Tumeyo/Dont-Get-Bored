@@ -102,6 +102,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
             <span className="section-kicker">{CONFIG.planner.recommendation.label}</span>
             <h3 id="recommended-plan-heading">Dinner, then a walk.</h3>
           </div>
+          <p className="recommendation-hint"><span aria-hidden="true">↳</span> {CONFIG.planner.recommendation.detailsHint}</p>
 
           <div className="itinerary-stops">
             <button

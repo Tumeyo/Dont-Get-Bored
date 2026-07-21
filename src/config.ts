@@ -60,6 +60,7 @@ export const CONFIG = {
     mainPlan: 'Dinner at Terrazza Restaurant, then a walk',
     recommendation: {
       label: 'TUMENDELGER’S RECOMMENDATION',
+      detailsHint: 'Click Dinner at Terrazza Restaurant to see the details and location.',
       dinnerTitle: 'Dinner at Terrazza Restaurant',
       dinnerDetail: 'Mediterranean food and a rooftop view',
       walkTitle: 'A walk after dinner',
