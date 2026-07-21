@@ -24,14 +24,14 @@ export function activityTitle(activityId: string): string {
 
 export function buildPlanText(plan: DatePlan): string {
   return [
-    `✨ ${CONFIG.names.her} + ${CONFIG.names.mine}: Date Plan™`,
+    `${CONFIG.names.her} + ${CONFIG.names.mine}: our date plan`,
     `When: ${formatDate(plan.preferredDate)} at ${plan.preferredTime}`,
     `Backup: ${formatDate(plan.alternativeDate)}`,
     `Plan: ${activityTitle(plan.activity)}`,
     plan.message ? `Note: ${plan.message}` : '',
     plan.contact ? `Confirm via: ${plan.contact}` : '',
     '',
-    'The lore starts here. 💘',
+    'Looking forward to it. ♡',
   ]
     .filter(Boolean)
     .join('\n')

@@ -154,12 +154,12 @@ export default function App() {
 
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Date request home">
-          <span>DATE</span><i>?</i><span>REQUEST</span>
+          <span>A SMALL</span><i>?</i><span>QUESTION</span>
         </a>
         <div className="privacy-chip"><span aria-hidden="true">●</span>{CONFIG.hero.privacy}</div>
       </header>
 
-      {accepted && <div className="breaking-news" role="status"><strong>BREAKING NEWS</strong><span>{CONFIG.yes.breakingNews.replace('BREAKING NEWS: ', '')}</span></div>}
+      {accepted && <div className="breaking-news" role="status"><strong>{CONFIG.yes.bannerLabel}</strong><span>{CONFIG.yes.breakingNews}</span></div>}
 
       <main id="main-content">
         {(phase === 'decision' || phase === 'loading' || phase === 'declined') && (
@@ -169,19 +169,19 @@ export default function App() {
                 <div className="eyebrow"><span aria-hidden="true">✦</span>{CONFIG.hero.eyebrow}</div>
                 <h1
                   onClick={investigateHeading}
-                  title="This heading seems oddly clickable…"
-                  aria-label={`${CONFIG.hero.questionLead} ${CONFIG.names.her}, ${CONFIG.hero.questionMiddle} ${CONFIG.names.mine}?`}
+                  title="The cat may have left something here."
+                  aria-label={`${CONFIG.hero.questionLead} ${CONFIG.names.her}, ${CONFIG.hero.questionMiddle}? From ${CONFIG.names.mine}.`}
                 >
                   <span>{CONFIG.hero.questionLead}</span>{' '}
-                  <em>{CONFIG.names.her}…</em><br />
-                  <span>{CONFIG.hero.questionMiddle}</span>{' '}
-                  <strong>{CONFIG.names.mine}</strong><span className="question-mark">?</span>
+                  <em>{CONFIG.names.her},</em><br />
+                  <strong>{CONFIG.hero.questionMiddle}</strong><span className="question-mark">?</span>
                 </h1>
+                <p className="hero-signature">— {CONFIG.names.mine}</p>
                 <p className="hero-caption"><span aria-hidden="true">“</span>{CONFIG.hero.caption}</p>
                 <div className="hero-proof">
-                  <span><b>01</b> brave question</span>
-                  <span><b>100%</b> honest intentions</span>
-                  <span><b>0</b> pressure</span>
+                  <span><b>one</b> honest question</span>
+                  <span><b>a little</b> courage</span>
+                  <span><b>zero</b> pressure</span>
                 </div>
               </div>
 
@@ -189,19 +189,17 @@ export default function App() {
                 {phase === 'declined' ? (
                   <section className="decline-card" aria-labelledby="decline-heading">
                     <span className="decline-icon" aria-hidden="true">🫶</span>
-                    <span className="section-kicker">RESPECTFULLY RECEIVED</span>
-                    <h2 id="decline-heading">No plot twist required.</h2>
+                    <span className="section-kicker">NO PRESSURE, REALLY</span>
+                    <h2 id="decline-heading">Totally understood.</h2>
                     <p>{CONFIG.no.message}</p>
-                    <button type="button" className="action-button" onClick={resetPage}>Back to the beginning</button>
+                    <button type="button" className="action-button" onClick={resetPage}>Start again</button>
                   </section>
                 ) : (
                   <DecisionCard
-                    accepted={accepted}
                     emoji={emoji}
                     onAccept={acceptDate}
                     onDecline={declineDate}
                     onReaction={setEmoji}
-                    onAnnouncement={announce}
                   />
                 )}
               </div>
@@ -211,13 +209,13 @@ export default function App() {
         )}
 
         {phase === 'loading' && (
-          <section className="loading-section" aria-live="polite" aria-label="Compatibility check in progress">
+          <section className="loading-section" aria-live="polite" aria-label="Preparing the date planner">
             <div className="loading-card">
-              <div className="loader-heart" aria-hidden="true">♥</div>
-              <span className="section-kicker">PLEASE HOLD FOR DRAMA</span>
+              <div className="loader-heart" aria-hidden="true">🐈</div>
+              <span className="section-kicker">JUST A SECOND</span>
               <h2>{CONFIG.loading[loadingIndex]}</h2>
               <div className="loading-track" aria-hidden="true"><span style={{ width: `${((loadingIndex + 1) / CONFIG.loading.length) * 100}%` }} /></div>
-              <p>Scientifically rigorous. Definitely not biased.</p>
+              <p>A brief and completely unofficial review.</p>
             </div>
           </section>
         )}

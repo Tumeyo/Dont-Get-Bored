@@ -32,7 +32,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
   function validate(): Errors {
     const next: Errors = {}
     if (!plan.preferredDate) next.preferredDate = 'Choose the main date.'
-    else if (plan.preferredDate < today) next.preferredDate = 'That date is in the past—time travel is not included.'
+    else if (plan.preferredDate < today) next.preferredDate = 'Please choose today or a later date.'
     if (!plan.preferredTime) next.preferredTime = 'Choose a time.'
     if (!plan.alternativeDate) next.alternativeDate = 'Add a backup date, just in case.'
     else if (plan.alternativeDate < today) next.alternativeDate = 'The backup date cannot be in the past.'
@@ -62,7 +62,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
       <form className="planner-card" onSubmit={handleSubmit} noValidate>
         {Object.values(errors).some(Boolean) && (
           <div className="error-summary" id="planner-errors" role="alert" tabIndex={-1}>
-            Tiny plot hole detected. Check the highlighted fields.
+            Please check the highlighted fields.
           </div>
         )}
 
@@ -111,8 +111,8 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
         </div>
 
         <fieldset className="activity-fieldset" aria-describedby={errors.activity ? 'activity-error' : undefined}>
-          <legend>What is the vibe?</legend>
-          <p className="legend-help">Choose exactly one wildly solid option.</p>
+          <legend>What sounds good?</legend>
+          <p className="legend-help">Choose whichever feels most like you.</p>
           <div className="activity-grid">
             {CONFIG.planner.activities.map((activity) => (
               <label className={`activity-option ${plan.activity === activity.id ? 'is-selected' : ''}`} key={activity.id}>
@@ -142,7 +142,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
               name="message"
               rows={4}
               maxLength={240}
-              placeholder="Playlist requests, snack opinions, plot twists…"
+              placeholder="A favorite place, food preference, or anything else…"
               value={plan.message}
               onChange={update}
             />
@@ -153,7 +153,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
               name="contact"
               type="text"
               maxLength={100}
-              placeholder="Text, call, carrier pigeon…"
+              placeholder="Text, call, Instagram…"
               value={plan.contact}
               onChange={update}
             />
