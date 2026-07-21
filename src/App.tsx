@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { BackgroundDecor, CaptionTicker, Confetti } from './components/Atmosphere'
+import { BackgroundDecor, Confetti } from './components/Atmosphere'
 import { ConfirmationCard } from './components/ConfirmationCard'
 import { DatePlanner } from './components/DatePlanner'
 import { DecisionCard } from './components/DecisionCard'
@@ -19,7 +19,6 @@ export default function App() {
   const [announcement, setAnnouncement] = useState('')
   const [celebrating, setCelebrating] = useState(false)
   const [loadingIndex, setLoadingIndex] = useState(0)
-  const [headingClicks, setHeadingClicks] = useState(0)
   const [toast, setToast] = useState('')
 
   const accepted = phase !== 'decision' && phase !== 'declined'
@@ -131,19 +130,9 @@ export default function App() {
     setPlan(EMPTY_PLAN)
     setPhase('decision')
     setEmoji(CONFIG.reactions.default)
-    setHeadingClicks(0)
     setToast('Fresh start unlocked.')
     announce('The page has been reset.')
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  function investigateHeading() {
-    const next = headingClicks + 1
-    setHeadingClicks(next)
-    if (next === CONFIG.easterEgg.clicks) {
-      setToast(CONFIG.easterEgg.message)
-      announce(CONFIG.easterEgg.message)
-    }
   }
 
   return (
@@ -152,50 +141,47 @@ export default function App() {
       <Confetti active={celebrating} />
       <a className="skip-link" href="#main-content">Skip to the date request</a>
 
-      <header className="site-header">
-        <div className="privacy-chip"><span aria-hidden="true">●</span>{CONFIG.hero.privacy}</div>
-      </header>
-
       {accepted && <div className="breaking-news" role="status"><strong>{CONFIG.yes.bannerLabel}</strong><span>{CONFIG.yes.breakingNews}</span></div>}
 
       <main id="main-content">
         {(phase === 'decision' || phase === 'loading' || phase === 'declined') && (
-          <>
-            <section className="hero" id="top">
-              <div className="hero-copy">
-                <h1
-                  onClick={investigateHeading}
-                  title="There may be something hidden here."
-                  aria-label={`${CONFIG.hero.question} ${CONFIG.hero.followup}`}
-                >
-                  <strong className="hero-heading-question">{CONFIG.hero.question}</strong>
-                  <span className="hero-heading-note">{CONFIG.hero.followup}</span>
-                </h1>
-                <p className="hero-signature">— {CONFIG.names.mine}</p>
-                <p className="hero-caption"><span aria-hidden="true">“</span>{CONFIG.hero.caption}</p>
-              </div>
+          <section className="hero" id="top">
+            <div className="hero-copy">
+              <div className="eyebrow">{CONFIG.hero.smallHeading}</div>
+              <h1>
+                <span className="hero-headline-line">{CONFIG.hero.headlineFirst}</span>
+                <em className="hero-headline-emphasis">{CONFIG.hero.headlineSecond}</em>
+              </h1>
+              <p className="hero-description">
+                <span>{CONFIG.hero.descriptionFirst}</span>
+                <strong>{CONFIG.hero.descriptionEmphasis}</strong>
+                <span>{CONFIG.hero.descriptionLast}</span>
+              </p>
+              <blockquote className="hero-quote">
+                <span>{CONFIG.hero.quoteFirst}</span>
+                <span>{CONFIG.hero.quoteSecond}</span>
+              </blockquote>
+            </div>
 
-              <div className="decision-column">
-                {phase === 'declined' ? (
-                  <section className="decline-card" aria-labelledby="decline-heading">
-                    <span className="decline-icon" aria-hidden="true">🫶</span>
-                    <span className="section-kicker">NO PRESSURE, REALLY</span>
-                    <h2 id="decline-heading">Totally understood.</h2>
-                    <p>{CONFIG.no.message}</p>
-                    <button type="button" className="action-button" onClick={resetPage}>Start again</button>
-                  </section>
-                ) : (
-                  <DecisionCard
-                    emoji={emoji}
-                    onAccept={acceptDate}
-                    onDecline={declineDate}
-                    onReaction={setEmoji}
-                  />
-                )}
-              </div>
-            </section>
-            <CaptionTicker />
-          </>
+            <div className="decision-column">
+              {phase === 'declined' ? (
+                <section className="decline-card" aria-labelledby="decline-heading">
+                  <span className="decline-icon" aria-hidden="true">🫶</span>
+                  <span className="section-kicker">{CONFIG.no.declinedLabel}</span>
+                  <h2 id="decline-heading">{CONFIG.no.declinedTitle}</h2>
+                  <p>{CONFIG.no.message}</p>
+                  <button type="button" className="action-button" onClick={resetPage}>{CONFIG.no.restartButton}</button>
+                </section>
+              ) : (
+                <DecisionCard
+                  emoji={emoji}
+                  onAccept={acceptDate}
+                  onDecline={declineDate}
+                  onReaction={setEmoji}
+                />
+              )}
+            </div>
+          </section>
         )}
 
         {phase === 'loading' && (
@@ -225,7 +211,7 @@ export default function App() {
 
       <footer>
         <span aria-hidden="true">♥</span>
-        <p>{accepted ? CONFIG.footer.secondPage : CONFIG.footer.firstPage}</p>
+        <p>{CONFIG.footer}</p>
         <span aria-hidden="true">✦</span>
       </footer>
 

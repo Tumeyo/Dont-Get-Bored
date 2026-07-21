@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react'
-import { CONFIG } from '../config'
 
 type MotionStyle = CSSProperties & Record<`--${string}`, string | number>
 
@@ -18,21 +17,6 @@ export function BackgroundDecor() {
           {symbol}
         </span>
       ))}
-    </div>
-  )
-}
-
-export function CaptionTicker() {
-  const phrases = [...CONFIG.tickerPhrases, ...CONFIG.tickerPhrases]
-  return (
-    <div className="ticker-wrap" aria-label="A few quiet notes">
-      <div className="ticker-track">
-        {phrases.map((phrase, index) => (
-          <span className="ticker-item" key={`${phrase}-${index}`} aria-hidden={index >= CONFIG.tickerPhrases.length}>
-            <span aria-hidden="true">✦</span> {phrase}
-          </span>
-        ))}
-      </div>
     </div>
   )
 }
