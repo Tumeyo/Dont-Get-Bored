@@ -35,6 +35,19 @@ export const CONFIG = {
   },
   no: {
     button: 'Tempting, but no',
+    dodgeLabels: [
+      'Nice try, still no',
+      'You’re very determined',
+      'This button is fading…',
+      'Fine, a real no',
+    ],
+    dodgeDescriptions: [
+      'The button seems to think you meant “not yet.”',
+      'It has now confused persistence with charm.',
+      'At this point, even the button is quietly rooting for dinner.',
+      'All right—one last click and I’ll accept defeat gracefully.',
+    ],
+    maxDodges: 4,
     declinedLabel: 'NO PRESSURE, REALLY',
     declinedTitle: 'Totally understood.',
     message: 'Totally understood. Thanks for being honest — no awkwardness, promise.',
