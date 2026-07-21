@@ -453,7 +453,20 @@ textarea:focus-visible {
   animation: orb-float 5s ease-in-out infinite;
   filter: drop-shadow(0 10px 9px rgba(48, 39, 45, .11));
 }
-.cat-character { display: block; font-size: 5.2rem; line-height: 1; }
+.reaction-character {
+  width: 5.2rem;
+  height: 5.2rem;
+  display: grid;
+  place-items: center;
+  color: #8d5362;
+  background: radial-gradient(circle at 35% 28%, #fffdfa 0 9%, #efd9dd 42%, #d8aab5 100%);
+  border: 1px solid rgba(48,39,45,.1);
+  border-radius: 50%;
+  box-shadow: inset 0 -8px 18px rgba(152,86,102,.08);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2.7rem;
+  line-height: 1;
+}
 .reaction-emoji {
   inset: -.15rem -.15rem auto auto;
   width: 2.15rem;
@@ -700,7 +713,7 @@ footer span:last-child { color: var(--pink-dark); }
   .decline-card { max-width: 100%; padding: 1.25rem; box-shadow: var(--shadow); }
   .decision-card { box-shadow: var(--shadow); }
   .reaction-orb { top: -4rem; right: .1rem; width: 5.8rem; }
-  .cat-character { font-size: 4.7rem; }
+  .reaction-character { width: 4.7rem; height: 4.7rem; font-size: 2.45rem; }
   .no-zone { height: 9rem; }
   .no-button { width: 10.75rem; }
   .recommendation-heading { align-items: flex-start; flex-direction: column; }

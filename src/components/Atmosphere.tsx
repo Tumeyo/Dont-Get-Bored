@@ -40,7 +40,7 @@ export function CaptionTicker() {
 export function ReactionOrb({ emoji }: { emoji: string }) {
   return (
     <div className="reaction-orb" aria-hidden="true">
-      <span className="cat-character">🐈</span>
+      <span className="reaction-character">☺</span>
       <span className="reaction-emoji">{emoji}</span>
     </div>
   )
