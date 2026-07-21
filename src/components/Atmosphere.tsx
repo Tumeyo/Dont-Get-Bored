@@ -3,7 +3,7 @@ import { CONFIG } from '../config'
 
 type MotionStyle = CSSProperties & Record<`--${string}`, string | number>
 
-const FLOATERS = ['♥', '·', '🐾', '♥', '·', '🐾', '♥', '·']
+const FLOATERS = ['♥', '·', '✦', '♥', '·', '✦', '♥', '·']
 
 export function BackgroundDecor() {
   return (

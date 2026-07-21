@@ -23,7 +23,7 @@ export function ConfirmationCard({ plan, onCopy, onShare, onEdit, onReset }: Pro
       <div className="confirmation-card">
         <span className="confirmation-stamp" aria-hidden="true">IT’S A DATE</span>
         <div className="section-kicker">{CONFIG.confirmation.eyebrow}</div>
-        <div className="big-check" aria-hidden="true">🐾</div>
+        <div className="big-check" aria-hidden="true">♡</div>
         <h2 id="confirmation-heading">{CONFIG.confirmation.heading}</h2>
         <p className="confirmation-subheading">{CONFIG.confirmation.subheading}</p>
 

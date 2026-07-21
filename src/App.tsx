@@ -169,7 +169,7 @@ export default function App() {
                 <div className="eyebrow"><span aria-hidden="true">✦</span>{CONFIG.hero.eyebrow}</div>
                 <h1
                   onClick={investigateHeading}
-                  title="The cat may have left something here."
+                  title="There may be something hidden here."
                   aria-label={`${CONFIG.hero.questionLead} ${CONFIG.names.her}, ${CONFIG.hero.questionMiddle}? From ${CONFIG.names.mine}.`}
                 >
                   <span>{CONFIG.hero.questionLead}</span>{' '}
@@ -211,7 +211,7 @@ export default function App() {
         {phase === 'loading' && (
           <section className="loading-section" aria-live="polite" aria-label="Preparing the date planner">
             <div className="loading-card">
-              <div className="loader-heart" aria-hidden="true">🐈</div>
+              <div className="loader-heart" aria-hidden="true">♡</div>
               <span className="section-kicker">JUST A SECOND</span>
               <h2>{CONFIG.loading[loadingIndex]}</h2>
               <div className="loading-track" aria-hidden="true"><span style={{ width: `${((loadingIndex + 1) / CONFIG.loading.length) * 100}%` }} /></div>
