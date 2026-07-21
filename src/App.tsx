@@ -153,9 +153,6 @@ export default function App() {
       <a className="skip-link" href="#main-content">Skip to the date request</a>
 
       <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="Date request home">
-          <span>A SMALL</span><i>?</i><span>QUESTION</span>
-        </a>
         <div className="privacy-chip"><span aria-hidden="true">●</span>{CONFIG.hero.privacy}</div>
       </header>
 
@@ -166,23 +163,16 @@ export default function App() {
           <>
             <section className="hero" id="top">
               <div className="hero-copy">
-                <div className="eyebrow"><span aria-hidden="true">✦</span>{CONFIG.hero.eyebrow}</div>
                 <h1
                   onClick={investigateHeading}
                   title="There may be something hidden here."
-                  aria-label={`${CONFIG.hero.questionLead} ${CONFIG.names.her}, ${CONFIG.hero.questionMiddle}? From ${CONFIG.names.mine}.`}
+                  aria-label={`${CONFIG.hero.question} ${CONFIG.hero.followup}`}
                 >
-                  <span>{CONFIG.hero.questionLead}</span>{' '}
-                  <em>{CONFIG.names.her},</em><br />
-                  <strong>{CONFIG.hero.questionMiddle}</strong><span className="question-mark">?</span>
+                  <strong className="hero-heading-question">{CONFIG.hero.question}</strong>
+                  <span className="hero-heading-note">{CONFIG.hero.followup}</span>
                 </h1>
                 <p className="hero-signature">— {CONFIG.names.mine}</p>
                 <p className="hero-caption"><span aria-hidden="true">“</span>{CONFIG.hero.caption}</p>
-                <div className="hero-proof">
-                  <span><b>one</b> honest question</span>
-                  <span><b>a little</b> courage</span>
-                  <span><b>zero</b> pressure</span>
-                </div>
               </div>
 
               <div className="decision-column">
@@ -235,7 +225,7 @@ export default function App() {
 
       <footer>
         <span aria-hidden="true">♥</span>
-        <p>{CONFIG.footer}</p>
+        <p>{accepted ? CONFIG.footer.secondPage : CONFIG.footer.firstPage}</p>
         <span aria-hidden="true">✦</span>
       </footer>
 

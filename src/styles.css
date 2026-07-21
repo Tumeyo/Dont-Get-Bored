@@ -330,7 +330,7 @@ textarea:focus-visible {
   outline-offset: 3px;
 }
 
-.site-header { padding-block: 1.35rem; }
+.site-header { padding-block: 1.35rem; justify-content: flex-end; }
 .wordmark { gap: .4rem; font-size: .7rem; font-weight: 700; letter-spacing: .14em; }
 .wordmark i {
   width: 1.55rem;
@@ -390,6 +390,18 @@ textarea:focus-visible {
 }
 .hero h1 em::before { display: none; }
 .hero h1 strong { color: var(--ink); font-weight: 500; text-shadow: none; }
+.hero-heading-question,
+.hero-heading-note { display: block; }
+.hero-heading-note {
+  max-width: 40rem;
+  margin-top: .8rem;
+  color: #655c61;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.25rem, 2.4vw, 1.85rem);
+  font-weight: 400 !important;
+  line-height: 1.32;
+  letter-spacing: -.025em;
+}
 .question-mark {
   display: inline !important;
   width: auto;

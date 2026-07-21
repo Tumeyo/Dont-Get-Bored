@@ -96,7 +96,6 @@ export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) 
 
   return (
     <section className="decision-card" aria-labelledby="decision-title">
-      <span className="tape tape-one" aria-hidden="true">A LITTLE COURAGE</span>
       <ReactionOrb emoji={emoji} />
       <div className="card-heading">
         <span className="mini-kicker">{CONFIG.decision.label}</span>
@@ -133,10 +132,6 @@ export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) 
         <p id="no-help" className="no-help" aria-live="polite">{noHelper}</p>
       </div>
 
-      <div className="certified-badge" aria-label={CONFIG.badge}>
-        <span aria-hidden="true">♡</span>
-        <span>{CONFIG.badge}</span>
-      </div>
     </section>
   )
 }

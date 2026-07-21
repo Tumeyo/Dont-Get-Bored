@@ -7,9 +7,8 @@ export const CONFIG = {
     mine: 'Tumendelger',
   },
   hero: {
-    eyebrow: 'A SMALL, HONEST QUESTION',
-    questionLead: 'Hey',
-    questionMiddle: 'would you like to go on a date with me',
+    question: 'Wanna go on a date with me?',
+    followup: 'I’ll bring the cheesy jokes—you bring that cute smile.',
     caption: 'Let’s go out and not get bored.',
     privacy: 'Private by design',
   },
@@ -101,12 +100,14 @@ export const CONFIG = {
     heading: 'We have a plan.',
     subheading: 'I’m looking forward to it.',
   },
-  badge: 'Made with a little courage',
   easterEgg: {
     clicks: 5,
     message: 'You found the tiny secret. ✦',
   },
-  footer: 'Made by Tumendelger, with a little courage.',
+  footer: {
+    firstPage: 'Made by Tumendelger, with a little courage.',
+    secondPage: 'Just a little courage, for someone I’d really like to take out.',
+  },
   storageKey: 'nomin-tumendelger-date-plan-v2',
   loadingStepMs: 900,
 } as const

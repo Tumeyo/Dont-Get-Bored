@@ -15,18 +15,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const imageUrl = `${protocol}://${host}/og.png`;
 
   return {
-    title: "A Small Question for Nomin-Erdene",
-    description: "Dinner at Terrazza, a walk, and one small question from Tumendelger.",
+    title: "Wanna go on a date with me? I’ll bring the cheesy jokes—you bring that cute smile.",
+    description: "Dinner at Terrazza, a walk, and a date invitation.",
     openGraph: {
-      title: "A Small Question for Nomin-Erdene",
-      description: "Dinner at Terrazza, a walk, and one small question from Tumendelger.",
+      title: "Wanna go on a date with me? I’ll bring the cheesy jokes—you bring that cute smile.",
+      description: "Dinner at Terrazza, a walk, and a date invitation.",
       type: "website",
       images: [{ url: imageUrl, width: 1731, height: 909, alt: "POV: you said you were bored, so I made a whole website" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "A Small Question for Nomin-Erdene",
-      description: "Dinner at Terrazza, a walk, and one small question from Tumendelger.",
+      title: "Wanna go on a date with me? I’ll bring the cheesy jokes—you bring that cute smile.",
+      description: "Dinner at Terrazza, a walk, and a date invitation.",
       images: [imageUrl],
     },
   };
