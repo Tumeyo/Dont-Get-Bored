@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
+    "build:github": "vite build --config vite.github.config.ts",
     "lint": "eslint .",
     "start": "vinext start"
   },
