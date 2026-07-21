@@ -1,0 +1,248 @@
+'use client'
+
+import { useCallback, useEffect, useState } from 'react'
+import { BackgroundDecor, CaptionTicker, Confetti } from './components/Atmosphere'
+import { ConfirmationCard } from './components/ConfirmationCard'
+import { DatePlanner } from './components/DatePlanner'
+import { DecisionCard } from './components/DecisionCard'
+import { CONFIG } from './config'
+import { buildPlanText, copyWithFallback, loadSavedPlan } from './lib'
+import { EMPTY_PLAN } from './types'
+import type { DatePlan } from './types'
+
+type Phase = 'decision' | 'loading' | 'planner' | 'confirmed' | 'declined'
+
+export default function App() {
+  const [phase, setPhase] = useState<Phase>('decision')
+  const [plan, setPlan] = useState<DatePlan>(EMPTY_PLAN)
+  const [emoji, setEmoji] = useState<string>(CONFIG.reactions.default)
+  const [announcement, setAnnouncement] = useState('')
+  const [celebrating, setCelebrating] = useState(false)
+  const [loadingIndex, setLoadingIndex] = useState(0)
+  const [headingClicks, setHeadingClicks] = useState(0)
+  const [toast, setToast] = useState('')
+
+  const accepted = phase !== 'decision' && phase !== 'declined'
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const savedPlan = loadSavedPlan()
+      if (savedPlan) {
+        setPlan(savedPlan)
+        setPhase('confirmed')
+      }
+    }, 0)
+    return () => window.clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    if (phase !== 'loading') return
+    const timers = CONFIG.loading.map((_, index) => window.setTimeout(
+      () => setLoadingIndex(index),
+      index * CONFIG.loadingStepMs,
+    ))
+    timers.push(window.setTimeout(
+      () => {
+        setPhase('planner')
+        setAnnouncement('Date approved. The date planning form is ready.')
+        window.setTimeout(() => document.getElementById('planner-heading')?.focus(), 0)
+      },
+      CONFIG.loading.length * CONFIG.loadingStepMs,
+    ))
+    return () => timers.forEach(window.clearTimeout)
+  }, [phase])
+
+  useEffect(() => {
+    if (!celebrating) return
+    const timer = window.setTimeout(() => setCelebrating(false), 4_500)
+    return () => window.clearTimeout(timer)
+  }, [celebrating])
+
+  useEffect(() => {
+    if (!toast) return
+    const timer = window.setTimeout(() => setToast(''), 4_000)
+    return () => window.clearTimeout(timer)
+  }, [toast])
+
+  const announce = useCallback((message: string) => {
+    setAnnouncement('')
+    window.setTimeout(() => setAnnouncement(message), 20)
+  }, [])
+
+  function acceptDate() {
+    setEmoji(CONFIG.reactions.accepted)
+    setCelebrating(true)
+    setLoadingIndex(0)
+    setPhase('loading')
+    announce(CONFIG.yes.breakingNews)
+  }
+
+  function declineDate() {
+    setEmoji(CONFIG.reactions.declined)
+    setPhase('declined')
+    announce(CONFIG.no.message)
+  }
+
+  function savePlan(nextPlan: DatePlan) {
+    setPlan(nextPlan)
+    try {
+      localStorage.setItem(CONFIG.storageKey, JSON.stringify(nextPlan))
+      announce('Your date plan is saved in this browser.')
+    } catch {
+      announce('Your browser blocked local storage, but your confirmation is ready on screen.')
+    }
+    setCelebrating(true)
+    setPhase('confirmed')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  async function copyDetails() {
+    const result = await copyWithFallback(buildPlanText(plan))
+    const message = result === 'copied' ? 'Date details copied!' : 'Copy window opened.'
+    setToast(message)
+    announce(message)
+  }
+
+  async function shareDetails() {
+    const text = buildPlanText(plan)
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Our Date Plan™', text })
+        announce('Share sheet opened.')
+        return
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return
+      }
+    }
+    const result = await copyWithFallback(text)
+    const message = result === 'copied'
+      ? 'Sharing is not available here, so the details were copied instead.'
+      : 'Sharing is not available here. A copy window was opened instead.'
+    setToast(message)
+    announce(message)
+  }
+
+  function resetPage() {
+    try {
+      localStorage.removeItem(CONFIG.storageKey)
+    } catch {
+      // Reset the visible experience even if storage access is unavailable.
+    }
+    setPlan(EMPTY_PLAN)
+    setPhase('decision')
+    setEmoji(CONFIG.reactions.default)
+    setHeadingClicks(0)
+    setToast('Fresh start unlocked.')
+    announce('The page has been reset.')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function investigateHeading() {
+    const next = headingClicks + 1
+    setHeadingClicks(next)
+    if (next === CONFIG.easterEgg.clicks) {
+      setToast(CONFIG.easterEgg.message)
+      announce(CONFIG.easterEgg.message)
+    }
+  }
+
+  return (
+    <div className="app-shell">
+      <BackgroundDecor />
+      <Confetti active={celebrating} />
+      <a className="skip-link" href="#main-content">Skip to the date request</a>
+
+      <header className="site-header">
+        <a className="wordmark" href="#top" aria-label="Date request home">
+          <span>DATE</span><i>?</i><span>REQUEST</span>
+        </a>
+        <div className="privacy-chip"><span aria-hidden="true">●</span>{CONFIG.hero.privacy}</div>
+      </header>
+
+      {accepted && <div className="breaking-news" role="status"><strong>BREAKING NEWS</strong><span>{CONFIG.yes.breakingNews.replace('BREAKING NEWS: ', '')}</span></div>}
+
+      <main id="main-content">
+        {(phase === 'decision' || phase === 'loading' || phase === 'declined') && (
+          <>
+            <section className="hero" id="top">
+              <div className="hero-copy">
+                <div className="eyebrow"><span aria-hidden="true">✦</span>{CONFIG.hero.eyebrow}</div>
+                <h1
+                  onClick={investigateHeading}
+                  title="This heading seems oddly clickable…"
+                  aria-label={`${CONFIG.hero.questionLead} ${CONFIG.names.her}, ${CONFIG.hero.questionMiddle} ${CONFIG.names.mine}?`}
+                >
+                  <span>{CONFIG.hero.questionLead}</span>{' '}
+                  <em>{CONFIG.names.her}…</em><br />
+                  <span>{CONFIG.hero.questionMiddle}</span>{' '}
+                  <strong>{CONFIG.names.mine}</strong><span className="question-mark">?</span>
+                </h1>
+                <p className="hero-caption"><span aria-hidden="true">“</span>{CONFIG.hero.caption}</p>
+                <div className="hero-proof">
+                  <span><b>01</b> brave question</span>
+                  <span><b>100%</b> honest intentions</span>
+                  <span><b>0</b> pressure</span>
+                </div>
+              </div>
+
+              <div className="decision-column">
+                {phase === 'declined' ? (
+                  <section className="decline-card" aria-labelledby="decline-heading">
+                    <span className="decline-icon" aria-hidden="true">🫶</span>
+                    <span className="section-kicker">RESPECTFULLY RECEIVED</span>
+                    <h2 id="decline-heading">No plot twist required.</h2>
+                    <p>{CONFIG.no.message}</p>
+                    <button type="button" className="action-button" onClick={resetPage}>Back to the beginning</button>
+                  </section>
+                ) : (
+                  <DecisionCard
+                    accepted={accepted}
+                    emoji={emoji}
+                    onAccept={acceptDate}
+                    onDecline={declineDate}
+                    onReaction={setEmoji}
+                    onAnnouncement={announce}
+                  />
+                )}
+              </div>
+            </section>
+            <CaptionTicker />
+          </>
+        )}
+
+        {phase === 'loading' && (
+          <section className="loading-section" aria-live="polite" aria-label="Compatibility check in progress">
+            <div className="loading-card">
+              <div className="loader-heart" aria-hidden="true">♥</div>
+              <span className="section-kicker">PLEASE HOLD FOR DRAMA</span>
+              <h2>{CONFIG.loading[loadingIndex]}</h2>
+              <div className="loading-track" aria-hidden="true"><span style={{ width: `${((loadingIndex + 1) / CONFIG.loading.length) * 100}%` }} /></div>
+              <p>Scientifically rigorous. Definitely not biased.</p>
+            </div>
+          </section>
+        )}
+
+        {phase === 'planner' && <DatePlanner initialPlan={plan} onSubmit={savePlan} />}
+
+        {phase === 'confirmed' && (
+          <ConfirmationCard
+            plan={plan}
+            onCopy={copyDetails}
+            onShare={shareDetails}
+            onEdit={() => setPhase('planner')}
+            onReset={resetPage}
+          />
+        )}
+      </main>
+
+      <footer>
+        <span aria-hidden="true">♥</span>
+        <p>{CONFIG.footer}</p>
+        <span aria-hidden="true">✦</span>
+      </footer>
+
+      <div className="sr-only" aria-live="polite" aria-atomic="true">{announcement}</div>
+      {toast && <div className="toast" role="status">{toast}</div>}
+    </div>
+  )
+}
