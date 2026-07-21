@@ -14,6 +14,7 @@ type Errors = Partial<Record<keyof DatePlan, string>>
 export function DatePlanner({ initialPlan, onSubmit }: Props) {
   const [plan, setPlan] = useState<DatePlan>(initialPlan)
   const [errors, setErrors] = useState<Errors>({})
+  const [showVenue, setShowVenue] = useState(false)
   const today = getTodayInput()
 
   function updateValue(name: keyof DatePlan, value: string) {
@@ -36,7 +37,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
     if (!plan.preferredTime) next.preferredTime = 'Choose a time.'
     if (!plan.alternativeDate) next.alternativeDate = 'Add a backup date, just in case.'
     else if (plan.alternativeDate < today) next.alternativeDate = 'The backup date cannot be in the past.'
-    if (!plan.activity) next.activity = 'Pick one date idea.'
+    if (!plan.activity) next.activity = 'Choose an extra, or select “Dinner + walk is perfect.”'
     return next
   }
 
@@ -65,6 +66,70 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
             Please check the highlighted fields.
           </div>
         )}
+
+        <section className="recommended-plan" aria-labelledby="recommended-plan-heading">
+          <div className="recommendation-heading">
+            <span className="section-kicker">{CONFIG.planner.recommendation.label}</span>
+            <h3 id="recommended-plan-heading">Dinner, then a walk.</h3>
+          </div>
+
+          <div className="itinerary-stops">
+            <button
+              className="itinerary-stop itinerary-stop-button"
+              type="button"
+              aria-expanded={showVenue}
+              aria-controls="terrazza-details"
+              onClick={() => setShowVenue((current) => !current)}
+            >
+              <span className="stop-number" aria-hidden="true">01</span>
+              <span className="stop-icon" aria-hidden="true">🍽️</span>
+              <span className="stop-copy">
+                <strong>{CONFIG.planner.recommendation.dinnerTitle}</strong>
+                <small>{CONFIG.planner.recommendation.dinnerDetail}</small>
+              </span>
+              <span className="stop-action" aria-hidden="true">{showVenue ? '−' : '+'}</span>
+            </button>
+
+            <span className="itinerary-line" aria-hidden="true" />
+
+            <div className="itinerary-stop">
+              <span className="stop-number" aria-hidden="true">02</span>
+              <span className="stop-icon" aria-hidden="true">🌙</span>
+              <span className="stop-copy">
+                <strong>{CONFIG.planner.recommendation.walkTitle}</strong>
+                <small>{CONFIG.planner.recommendation.walkDetail}</small>
+              </span>
+            </div>
+          </div>
+
+          {showVenue && (
+            <div className="venue-preview" id="terrazza-details">
+              <a
+                className="venue-photo-link"
+                href={CONFIG.planner.recommendation.venue.mapUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Open ${CONFIG.planner.recommendation.venue.name} in Google Maps`}
+              >
+                <img
+                  src={CONFIG.planner.recommendation.venue.image}
+                  alt="A dinner served at Terrazza Restaurant"
+                  loading="lazy"
+                />
+                <span>Open location ↗</span>
+              </a>
+              <div className="venue-copy">
+                <span className="mini-kicker">THE LOCATION</span>
+                <h4>{CONFIG.planner.recommendation.venue.name}</h4>
+                <p>{CONFIG.planner.recommendation.venue.address}</p>
+                <p>{CONFIG.planner.recommendation.venue.phone}</p>
+                <a href={CONFIG.planner.recommendation.venue.mapUrl} target="_blank" rel="noreferrer">
+                  View on Google Maps <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+          )}
+        </section>
 
         <div className="date-grid">
           <Field label={CONFIG.planner.fields.preferredDate} error={errors.preferredDate} htmlFor="preferredDate">
@@ -111,8 +176,8 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
         </div>
 
         <fieldset className="activity-fieldset" aria-describedby={errors.activity ? 'activity-error' : undefined}>
-          <legend>What sounds good?</legend>
-          <p className="legend-help">Choose whichever feels most like you.</p>
+          <legend>Want to add something?</legend>
+          <p className="legend-help">Dinner and the walk are already in. Pick one extra—or keep it simple.</p>
           <div className="activity-grid">
             {CONFIG.planner.activities.map((activity) => (
               <label className={`activity-option ${plan.activity === activity.id ? 'is-selected' : ''}`} key={activity.id}>

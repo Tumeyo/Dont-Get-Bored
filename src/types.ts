@@ -11,8 +11,7 @@ export const EMPTY_PLAN: DatePlan = {
   preferredDate: '',
   preferredTime: '',
   alternativeDate: '',
-  activity: '',
+  activity: 'none',
   message: '',
   contact: '',
 }
-

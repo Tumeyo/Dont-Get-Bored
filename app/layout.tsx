@@ -16,17 +16,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "A Small Question for Nomin-Erdene",
-    description: "A small, honest date invitation from Tumendelger.",
+    description: "Dinner at Terrazza, a walk, and one small question from Tumendelger.",
     openGraph: {
       title: "A Small Question for Nomin-Erdene",
-      description: "A small, honest date invitation from Tumendelger.",
+      description: "Dinner at Terrazza, a walk, and one small question from Tumendelger.",
       type: "website",
-      images: [{ url: imageUrl, width: 1731, height: 909, alt: "A small question for Nomin-Erdene, from Tumendelger" }],
+      images: [{ url: imageUrl, width: 1731, height: 909, alt: "POV: you said you were bored, so I made a whole website" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "A Small Question for Nomin-Erdene",
-      description: "A small, honest date invitation from Tumendelger.",
+      description: "Dinner at Terrazza, a walk, and one small question from Tumendelger.",
       images: [imageUrl],
     },
   };

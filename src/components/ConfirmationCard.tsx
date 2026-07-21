@@ -15,7 +15,8 @@ export function ConfirmationCard({ plan, onCopy, onShare, onEdit, onReset }: Pro
     { icon: '📅', label: 'Main date', value: formatDate(plan.preferredDate) },
     { icon: '⏰', label: 'Time', value: plan.preferredTime },
     { icon: '↻', label: 'Backup', value: formatDate(plan.alternativeDate) },
-    { icon: '♡', label: 'The plan', value: activityTitle(plan.activity) },
+    { icon: '🍽️', label: 'Main plan', value: CONFIG.planner.mainPlan },
+    { icon: '✦', label: 'Extra', value: activityTitle(plan.activity) },
   ]
 
   return (
