@@ -93,6 +93,14 @@ export const CONFIG = {
       { id: 'surprise', emoji: '✨', title: 'Surprise me', detail: 'Choose one small extra' },
     ],
     submit: 'Save the plan',
+    submitting: 'Sending the plan…',
+    submissionNote: 'Sent privately when you save the plan.',
+    submissionError: 'The plan didn’t send. Please check the connection and try again.',
+    submissionSuccess: 'The date plan was sent successfully.',
+  },
+  formspree: {
+    endpoint: 'https://formspree.io/f/mdaqdazd',
+    subject: 'New date response',
   },
   confirmation: {
     eyebrow: 'IT’S A DATE',

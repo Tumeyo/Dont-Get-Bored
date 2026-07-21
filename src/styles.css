@@ -683,6 +683,8 @@ textarea:focus-visible {
 }
 .primary-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(48,39,45,.22); }
 .primary-submit span { color: #dec5cb; }
+.primary-submit:disabled { cursor: wait; opacity: .68; transform: none; box-shadow: 0 8px 18px rgba(48,39,45,.12); }
+.submission-error { margin: 1rem 0 0; padding: .8rem .9rem; color: #79384a; background: #fae8ed; border: 1px solid rgba(121,56,74,.24); border-radius: .65rem; font-size: .8rem; line-height: 1.45; }
 
 .confirmation-card { box-shadow: var(--shadow); }
 .confirmation-card::before { width: 14rem; height: 14rem; top: -10rem; left: -8rem; background: #eee1d9; }

@@ -6,7 +6,7 @@ import type { DatePlan } from '../types'
 
 interface Props {
   initialPlan: DatePlan
-  onSubmit: (plan: DatePlan) => void
+  onSubmit: (plan: DatePlan) => Promise<void>
 }
 
 type Errors = Partial<Record<keyof DatePlan, string>>
@@ -15,6 +15,8 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
   const [plan, setPlan] = useState<DatePlan>(initialPlan)
   const [errors, setErrors] = useState<Errors>({})
   const [showVenue, setShowVenue] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submissionError, setSubmissionError] = useState('')
   const today = getTodayInput()
 
   function updateValue(name: keyof DatePlan, value: string) {
@@ -41,15 +43,26 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
     return next
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (isSubmitting) return
     const nextErrors = validate()
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors)
       document.getElementById('planner-errors')?.focus()
       return
     }
-    onSubmit(plan)
+
+    setSubmissionError('')
+    setIsSubmitting(true)
+    try {
+      await onSubmit(plan)
+    } catch {
+      setSubmissionError(CONFIG.planner.submissionError)
+      window.setTimeout(() => document.getElementById('submission-error')?.focus(), 0)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -225,9 +238,16 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
           </Field>
         </div>
 
+        {submissionError && (
+          <p className="submission-error" id="submission-error" role="alert" tabIndex={-1}>{submissionError}</p>
+        )}
+
         <div className="form-footer">
-          <p><span aria-hidden="true">🔒</span> Saved only in this browser.</p>
-          <button className="primary-submit" type="submit">{CONFIG.planner.submit}<span aria-hidden="true">→</span></button>
+          <p><span aria-hidden="true">🔒</span> {CONFIG.planner.submissionNote}</p>
+          <button className="primary-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? CONFIG.planner.submitting : CONFIG.planner.submit}
+            <span aria-hidden="true">→</span>
+          </button>
         </div>
       </form>
     </section>

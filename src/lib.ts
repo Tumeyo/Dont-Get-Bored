@@ -38,6 +38,31 @@ export function buildPlanText(plan: DatePlan): string {
     .join('\n')
 }
 
+export async function sendPlan(plan: DatePlan): Promise<void> {
+  const response = await fetch(CONFIG.formspree.endpoint, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      _subject: CONFIG.formspree.subject,
+      answer: 'Yes — take me out',
+      preferred_date: formatDate(plan.preferredDate),
+      preferred_time: plan.preferredTime,
+      backup_date: formatDate(plan.alternativeDate),
+      main_plan: CONFIG.planner.mainPlan,
+      extra: activityTitle(plan.activity),
+      note: plan.message || 'None',
+      contact: plan.contact || 'Not provided',
+      full_response: buildPlanText(plan),
+      page: window.location.href,
+    }),
+  })
+
+  if (!response.ok) throw new Error(`Formspree submission failed with status ${response.status}`)
+}
+
 export function loadSavedPlan(): DatePlan | null {
   try {
     const saved = localStorage.getItem(CONFIG.storageKey)

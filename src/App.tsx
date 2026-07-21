@@ -6,7 +6,7 @@ import { ConfirmationCard } from './components/ConfirmationCard'
 import { DatePlanner } from './components/DatePlanner'
 import { DecisionCard } from './components/DecisionCard'
 import { CONFIG } from './config'
-import { buildPlanText, copyWithFallback, loadSavedPlan } from './lib'
+import { buildPlanText, copyWithFallback, loadSavedPlan, sendPlan } from './lib'
 import { EMPTY_PLAN } from './types'
 import type { DatePlan } from './types'
 
@@ -82,13 +82,14 @@ export default function App() {
     announce(CONFIG.no.message)
   }
 
-  function savePlan(nextPlan: DatePlan) {
+  async function savePlan(nextPlan: DatePlan) {
+    await sendPlan(nextPlan)
     setPlan(nextPlan)
     try {
       localStorage.setItem(CONFIG.storageKey, JSON.stringify(nextPlan))
-      announce('Your date plan is saved in this browser.')
+      announce(CONFIG.planner.submissionSuccess)
     } catch {
-      announce('Your browser blocked local storage, but your confirmation is ready on screen.')
+      announce(`${CONFIG.planner.submissionSuccess} Your browser did not save a local copy.`)
     }
     setCelebrating(true)
     setPhase('confirmed')
