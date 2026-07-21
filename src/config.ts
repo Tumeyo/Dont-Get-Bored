@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CUSTOMIZE HERE — names, text, options, timing, and behavior live in one place.
+// CUSTOMIZE HERE: names, text, options, timing, and behavior live in one place.
 // ─────────────────────────────────────────────────────────────────────────────
 export const CONFIG = {
   names: {
@@ -24,7 +24,7 @@ export const CONFIG = {
     declined: '♡',
   },
   decision: {
-    title: 'One date—what do you say?',
+    title: 'One date. What do you say?',
     subtitle: 'I’ll handle the plan. You bring that dangerously good company.',
     note: 'No grand expectations. I just couldn’t leave a good question unasked.',
   },
@@ -45,12 +45,12 @@ export const CONFIG = {
       'The button seems to think you meant “not yet.”',
       'It has now confused persistence with charm.',
       'At this point, even the button is quietly rooting for dinner.',
-      'All right—one last click and I’ll accept defeat gracefully.',
+      'All right. One last click and I’ll accept defeat gracefully.',
     ],
     maxDodges: 4,
     declinedLabel: 'NO PRESSURE, REALLY',
     declinedTitle: 'Totally understood.',
-    message: 'Totally understood. Thanks for being honest — no awkwardness, promise.',
+    message: 'Totally understood. Thanks for being honest. No awkwardness, promise.',
     restartButton: 'Start again',
   },
   loading: [

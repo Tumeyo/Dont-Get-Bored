@@ -41,7 +41,7 @@ export function ConfirmationCard({ plan, onCopy, onShare, onEdit, onReset }: Pro
         {plan.message && (
           <blockquote className="plan-note">
             “{plan.message}”
-            <span>— a small note</span>
+            <span>A small note</span>
           </blockquote>
         )}
         {plan.contact && <p className="contact-note"><strong>Confirm via:</strong> {plan.contact}</p>}

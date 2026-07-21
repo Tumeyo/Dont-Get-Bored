@@ -190,7 +190,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
 
         <fieldset className="activity-fieldset" aria-describedby={errors.activity ? 'activity-error' : undefined}>
           <legend>Want to add something?</legend>
-          <p className="legend-help">Dinner and the walk are already in. Pick one extra—or keep it simple.</p>
+          <p className="legend-help">Dinner and the walk are already in. Pick one extra, or keep it simple.</p>
           <div className="activity-grid">
             {CONFIG.planner.activities.map((activity) => (
               <label className={`activity-option ${plan.activity === activity.id ? 'is-selected' : ''}`} key={activity.id}>
