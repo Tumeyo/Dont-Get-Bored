@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import type { CSSProperties, MouseEvent } from 'react'
+import type { CSSProperties } from 'react'
 import { CONFIG } from '../config'
 import { ReactionOrb } from './Atmosphere'
 
 interface Props {
   emoji: string
   onAccept: () => void
-  onDecline: () => void
   onReaction: (emoji: string) => void
 }
 
@@ -15,25 +14,28 @@ interface NoPosition {
   top: number
 }
 
-export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) {
+export function DecisionCard({ emoji, onAccept, onReaction }: Props) {
   const [noAttempts, setNoAttempts] = useState(0)
   const [noPosition, setNoPosition] = useState<NoPosition | null>(null)
-  const [directAnswer, setDirectAnswer] = useState(false)
+  const [motionDisabled, setMotionDisabled] = useState(false)
   const [isTeleporting, setIsTeleporting] = useState(false)
+  const [noGone, setNoGone] = useState(false)
   const noZoneRef = useRef<HTMLDivElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
+  const yesButtonRef = useRef<HTMLButtonElement>(null)
+  const removalTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
 
     function updateMotionPreference() {
-      setDirectAnswer(motionPreference.matches)
+      setMotionDisabled(motionPreference.matches)
       if (motionPreference.matches) setNoPosition(null)
     }
 
     function handleEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setDirectAnswer(true)
+        setMotionDisabled(true)
         setNoPosition(null)
       }
     }
@@ -45,6 +47,7 @@ export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) 
     return () => {
       motionPreference.removeEventListener('change', updateMotionPreference)
       window.removeEventListener('keydown', handleEscape)
+      if (removalTimerRef.current !== null) window.clearTimeout(removalTimerRef.current)
     }
   }, [])
 
@@ -71,17 +74,21 @@ export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) 
     })
   }
 
-  function handleNoClick(event: MouseEvent<HTMLButtonElement>) {
-    const isKeyboardClick = event.detail === 0
-    if (isKeyboardClick || directAnswer || noAttempts >= CONFIG.no.maxDodges) {
-      onDecline()
-      return
-    }
-
+  function handleNoClick() {
+    if (noAttempts >= CONFIG.no.maxDodges) return
     const nextAttempt = noAttempts + 1
     setNoAttempts(nextAttempt)
     onReaction(CONFIG.reactions.noHover)
-    window.requestAnimationFrame(() => teleportButton(nextAttempt))
+    if (!motionDisabled) window.requestAnimationFrame(() => teleportButton(nextAttempt))
+
+    if (nextAttempt === CONFIG.no.maxDodges) {
+      removalTimerRef.current = window.setTimeout(() => {
+        setNoGone(true)
+        setNoPosition(null)
+        onReaction(CONFIG.reactions.default)
+        yesButtonRef.current?.focus()
+      }, motionDisabled ? 0 : 280)
+    }
   }
 
   const noLabel = noAttempts === 0
@@ -90,7 +97,9 @@ export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) 
   const decisionNote = noAttempts === 0
     ? CONFIG.decision.note
     : CONFIG.no.dodgeDescriptions[Math.min(noAttempts - 1, CONFIG.no.dodgeDescriptions.length - 1)]
-  const noOpacity = directAnswer ? 1 : Math.max(.36, 1 - noAttempts * .16)
+  const noOpacity = noAttempts >= CONFIG.no.maxDodges
+    ? 0
+    : Math.max(.34, 1 - noAttempts * .22)
   const noStyle: CSSProperties = noPosition
     ? { left: noPosition.left, top: noPosition.top, opacity: noOpacity }
     : { opacity: noOpacity }
@@ -103,6 +112,7 @@ export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) 
 
       <div className="action-stack">
         <button
+          ref={yesButtonRef}
           className="yes-button"
           type="button"
           onClick={onAccept}
@@ -113,20 +123,22 @@ export function DecisionCard({ emoji, onAccept, onDecline, onReaction }: Props) 
           <span aria-hidden="true">→</span>
         </button>
 
-        <div className="no-zone" ref={noZoneRef}>
-          <button
-            ref={noButtonRef}
-            className={`no-button${noPosition ? ' is-moved' : ''}${isTeleporting ? ' is-teleporting' : ''}`}
-            style={noStyle}
-            type="button"
-            aria-describedby="decision-note"
-            onPointerEnter={() => onReaction(CONFIG.reactions.noHover)}
-            onPointerLeave={() => onReaction(CONFIG.reactions.default)}
-            onClick={handleNoClick}
-          >
-            {noLabel}
-          </button>
-        </div>
+        {!noGone && (
+          <div className="no-zone" ref={noZoneRef}>
+            <button
+              ref={noButtonRef}
+              className={`no-button${noPosition ? ' is-moved' : ''}${isTeleporting ? ' is-teleporting' : ''}`}
+              style={noStyle}
+              type="button"
+              aria-describedby="decision-note"
+              onPointerEnter={() => onReaction(CONFIG.reactions.noHover)}
+              onPointerLeave={() => onReaction(CONFIG.reactions.default)}
+              onClick={handleNoClick}
+            >
+              {noLabel}
+            </button>
+          </div>
+        )}
       </div>
       <p id="decision-note" className="decision-note" aria-live="polite">{decisionNote}</p>
     </section>

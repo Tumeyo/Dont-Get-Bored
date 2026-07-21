@@ -10,7 +10,7 @@ import { buildPlanText, copyWithFallback, loadSavedPlan, sendPlan } from './lib'
 import { EMPTY_PLAN } from './types'
 import type { DatePlan } from './types'
 
-type Phase = 'decision' | 'loading' | 'planner' | 'confirmed' | 'declined'
+type Phase = 'decision' | 'loading' | 'planner' | 'confirmed'
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('decision')
@@ -21,7 +21,7 @@ export default function App() {
   const [loadingIndex, setLoadingIndex] = useState(0)
   const [toast, setToast] = useState('')
 
-  const accepted = phase !== 'decision' && phase !== 'declined'
+  const accepted = phase !== 'decision'
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -74,12 +74,6 @@ export default function App() {
     setLoadingIndex(0)
     setPhase('loading')
     announce(CONFIG.yes.breakingNews)
-  }
-
-  function declineDate() {
-    setEmoji(CONFIG.reactions.declined)
-    setPhase('declined')
-    announce(CONFIG.no.message)
   }
 
   async function savePlan(nextPlan: DatePlan) {
@@ -145,7 +139,7 @@ export default function App() {
       {accepted && <div className="breaking-news" role="status"><strong>{CONFIG.yes.bannerLabel}</strong><span>{CONFIG.yes.breakingNews}</span></div>}
 
       <main id="main-content">
-        {(phase === 'decision' || phase === 'loading' || phase === 'declined') && (
+        {(phase === 'decision' || phase === 'loading') && (
           <section className="hero" id="top">
             <div className="hero-copy">
               <div className="eyebrow">{CONFIG.hero.smallHeading}</div>
@@ -165,22 +159,11 @@ export default function App() {
             </div>
 
             <div className="decision-column">
-              {phase === 'declined' ? (
-                <section className="decline-card" aria-labelledby="decline-heading">
-                  <span className="decline-icon" aria-hidden="true">🫶</span>
-                  <span className="section-kicker">{CONFIG.no.declinedLabel}</span>
-                  <h2 id="decline-heading">{CONFIG.no.declinedTitle}</h2>
-                  <p>{CONFIG.no.message}</p>
-                  <button type="button" className="action-button" onClick={resetPage}>{CONFIG.no.restartButton}</button>
-                </section>
-              ) : (
-                <DecisionCard
-                  emoji={emoji}
-                  onAccept={acceptDate}
-                  onDecline={declineDate}
-                  onReaction={setEmoji}
-                />
-              )}
+              <DecisionCard
+                emoji={emoji}
+                onAccept={acceptDate}
+                onReaction={setEmoji}
+              />
             </div>
           </section>
         )}
