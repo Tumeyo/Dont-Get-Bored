@@ -1,5 +1,5 @@
 import { CONFIG } from '../config'
-import { activityTitle, formatDate } from '../lib'
+import { activityTitles, formatDate } from '../lib'
 import type { DatePlan } from '../types'
 
 interface Props {
@@ -16,7 +16,7 @@ export function ConfirmationCard({ plan, onCopy, onShare, onEdit, onReset }: Pro
     { icon: '⏰', label: 'Time', value: plan.preferredTime },
     { icon: '↻', label: 'Backup', value: formatDate(plan.alternativeDate) },
     { icon: '🍽️', label: 'Main plan', value: CONFIG.planner.mainPlan },
-    { icon: '✦', label: 'Extra', value: activityTitle(plan.activity) },
+    { icon: '✦', label: 'Extras', value: activityTitles(plan.activities) },
   ]
 
   return (

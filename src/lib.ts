@@ -22,13 +22,17 @@ export function activityTitle(activityId: string): string {
   return CONFIG.planner.activities.find((activity) => activity.id === activityId)?.title ?? activityId
 }
 
+export function activityTitles(activityIds: string[]): string {
+  return activityIds.map(activityTitle).join(', ')
+}
+
 export function buildPlanText(plan: DatePlan): string {
   return [
     `${CONFIG.names.her} + ${CONFIG.names.mine}: our date plan`,
     `When: ${formatDate(plan.preferredDate)} at ${plan.preferredTime}`,
     `Backup: ${formatDate(plan.alternativeDate)}`,
     `Main plan: ${CONFIG.planner.mainPlan}`,
-    `Extra: ${activityTitle(plan.activity)}`,
+    `Extras: ${activityTitles(plan.activities)}`,
     plan.message ? `Note: ${plan.message}` : '',
     plan.contact ? `Confirm via: ${plan.contact}` : '',
     '',
@@ -52,7 +56,7 @@ export async function sendPlan(plan: DatePlan): Promise<void> {
       preferred_time: plan.preferredTime,
       backup_date: formatDate(plan.alternativeDate),
       main_plan: CONFIG.planner.mainPlan,
-      extra: activityTitle(plan.activity),
+      extras: activityTitles(plan.activities),
       note: plan.message || 'None',
       contact: plan.contact || 'Not provided',
       full_response: buildPlanText(plan),
@@ -69,17 +73,32 @@ export function loadSavedPlan(): DatePlan | null {
     if (!saved) return null
     const value: unknown = JSON.parse(saved)
     if (!value || typeof value !== 'object') return null
-    const candidate = value as Partial<DatePlan>
-    const keys: (keyof DatePlan)[] = [
+    const candidate = value as Partial<DatePlan> & { activity?: unknown }
+    const textKeys = [
       'preferredDate',
       'preferredTime',
       'alternativeDate',
-      'activity',
       'message',
       'contact',
-    ]
-    if (!keys.every((key) => typeof candidate[key] === 'string')) return null
-    return candidate as DatePlan
+    ] as const
+    if (!textKeys.every((key) => typeof candidate[key] === 'string')) return null
+
+    const activities = Array.isArray(candidate.activities)
+      && candidate.activities.every((activity) => typeof activity === 'string')
+      ? candidate.activities
+      : typeof candidate.activity === 'string'
+        ? [candidate.activity]
+        : null
+    if (!activities) return null
+
+    return {
+      preferredDate: candidate.preferredDate as string,
+      preferredTime: candidate.preferredTime as string,
+      alternativeDate: candidate.alternativeDate as string,
+      activities,
+      message: candidate.message as string,
+      contact: candidate.contact as string,
+    }
   } catch {
     return null
   }

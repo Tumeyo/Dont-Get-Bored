@@ -32,6 +32,23 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
     updateValue(event.target.name as keyof DatePlan, event.target.value)
   }
 
+  function toggleActivity(activityId: string) {
+    setPlan((current) => {
+      if (activityId === 'none') return { ...current, activities: ['none'] }
+
+      const selected = current.activities.filter((id) => id !== 'none')
+      const activities = selected.includes(activityId)
+        ? selected.filter((id) => id !== activityId)
+        : [...selected, activityId]
+      return { ...current, activities }
+    })
+    setErrors((current) => {
+      const next = { ...current }
+      delete next.activities
+      return next
+    })
+  }
+
   function validate(): Errors {
     const next: Errors = {}
     if (!plan.preferredDate) next.preferredDate = 'Choose the main date.'
@@ -39,7 +56,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
     if (!plan.preferredTime) next.preferredTime = 'Choose a time.'
     if (!plan.alternativeDate) next.alternativeDate = 'Add a backup date, just in case.'
     else if (plan.alternativeDate < today) next.alternativeDate = 'The backup date cannot be in the past.'
-    if (!plan.activity) next.activity = 'Choose an extra, or select “Dinner + walk is perfect.”'
+    if (plan.activities.length === 0) next.activities = 'Choose at least one option, or select “Dinner + walk is perfect.”'
     return next
   }
 
@@ -188,29 +205,29 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
           </Field>
         </div>
 
-        <fieldset className="activity-fieldset" aria-describedby={errors.activity ? 'activity-error' : undefined}>
+        <fieldset className="activity-fieldset" aria-describedby={errors.activities ? 'activities-error' : undefined}>
           <legend>Want to add something?</legend>
-          <p className="legend-help">Dinner and the walk are already in. Pick one extra, or keep it simple.</p>
+          <p className="legend-help">Dinner and the walk are already in. Pick as many extras as you like, or keep it simple.</p>
           <div className="activity-grid">
             {CONFIG.planner.activities.map((activity) => (
-              <label className={`activity-option ${plan.activity === activity.id ? 'is-selected' : ''}`} key={activity.id}>
+              <label className={`activity-option ${plan.activities.includes(activity.id) ? 'is-selected' : ''}`} key={activity.id}>
                 <input
-                  type="radio"
-                  name="activity"
+                  type="checkbox"
+                  name="activities"
                   value={activity.id}
-                  checked={plan.activity === activity.id}
-                  onChange={update}
+                  checked={plan.activities.includes(activity.id)}
+                  onChange={() => toggleActivity(activity.id)}
                 />
                 <span className="activity-emoji" aria-hidden="true">{activity.emoji}</span>
                 <span className="activity-copy">
                   <strong>{activity.title}</strong>
                   <small>{activity.detail}</small>
                 </span>
-                <span className="radio-mark" aria-hidden="true" />
+                <span className="selection-mark" aria-hidden="true" />
               </label>
             ))}
           </div>
-          {errors.activity && <span className="field-error" id="activity-error">{errors.activity}</span>}
+          {errors.activities && <span className="field-error" id="activities-error">{errors.activities}</span>}
         </fieldset>
 
         <div className="text-grid">
@@ -220,7 +237,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
               name="message"
               rows={4}
               maxLength={240}
-              placeholder="A favorite place, food preference, or anything else…"
+              placeholder={CONFIG.planner.fields.messagePlaceholder}
               value={plan.message}
               onChange={update}
             />
@@ -231,7 +248,7 @@ export function DatePlanner({ initialPlan, onSubmit }: Props) {
               name="contact"
               type="text"
               maxLength={100}
-              placeholder="Text, call, Instagram…"
+              placeholder={CONFIG.planner.fields.contactPlaceholder}
               value={plan.contact}
               onChange={update}
             />

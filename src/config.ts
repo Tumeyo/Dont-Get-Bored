@@ -76,8 +76,10 @@ export const CONFIG = {
       preferredDate: 'Preferred date',
       preferredTime: 'Preferred time',
       alternativeDate: 'Backup date',
-      message: 'Anything you’d like to add?',
-      contact: 'Best way to confirm (optional)',
+      message: 'A message for me (optional)',
+      messagePlaceholder: 'Leave me a note, a question, or anything you want me to know…',
+      contact: 'How should I confirm with you? (optional)',
+      contactPlaceholder: 'Text, call, Instagram…',
     },
     activities: [
       { id: 'none', emoji: '♡', title: 'Dinner + walk is perfect', detail: 'No extra needed' },
